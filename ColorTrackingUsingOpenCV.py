@@ -11,11 +11,10 @@ ap.add_argument("-v","--video",help = "path to video file")
 ap.add_argument("-b","--buffer",type = int, default = 64, help = "max buffer size")
 args = vars(ap.parse_args())
 
-l = np.uint8((([125,100,30])))
-u = np.uint8((([255, 255, 255])))
+//color range for pink
+lower = np.uint8((([125,100,30])))
+upper = np.uint8((([255, 255, 255])))
 pts = deque(maxlen = args["buffer"])
-
-
 
 if not args.get("video",False):
     vs = VideoStream(src = 0).start()
@@ -32,7 +31,7 @@ while True:
     blurred = cv2.GaussianBlur(frame, (11,11), 0)
     hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
     
-    mask = cv2.inRange(hsv, l, u)
+    mask = cv2.inRange(hsv, lower, upper)
     mask = cv2.erode(mask, None, iterations = 2)
     mask = cv2.dilate(mask, None, iterations = 2)
     
